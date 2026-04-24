@@ -1,0 +1,83 @@
+import requests
+import sys
+
+# ———————————————–
+
+# header_grabber.py — by codex-regex
+
+# What it does: Grabs HTTP headers from a URL
+
+# Usage: python header_grabber.py https://example.com
+
+# Headers reveal a lot — server type, security settings, tech stack
+
+# ———————————————–
+
+def grab_headers(url):
+“””
+Fetches and displays HTTP response headers from a URL.
+Headers are like a website’s ID card — they often reveal
+what server software is running, security settings, and more.
+“””
+print(f”\n🔍 Grabbing headers from: {url}\n”)
+print(”-” * 40)
+
+```
+try:
+    response = requests.get(url, timeout=5)
+
+    print(f"📡 Status Code : {response.status_code}")
+    print(f"\n📋 Response Headers:\n")
+
+    # Security headers to flag specifically
+    security_headers = [
+        "Strict-Transport-Security",
+        "Content-Security-Policy",
+        "X-Frame-Options",
+        "X-XSS-Protection",
+        "X-Content-Type-Options",
+    ]
+
+    found_security = []
+
+    for header, value in response.headers.items():
+        print(f"  {header}: {value}")
+        if header in security_headers:
+            found_security.append(header)
+
+    print("\n" + "-" * 40)
+    print(f"\n🛡️  Security Headers Found ({len(found_security)}/{len(security_headers)}):")
+
+    for h in security_headers:
+        if h in found_security:
+            print(f"  ✅ {h}")
+        else:
+            print(f"  ⚠️  {h} — MISSING")
+
+except requests.exceptions.ConnectionError:
+    print(f"❌ Could not connect to {url}")
+except requests.exceptions.Timeout:
+    print(f"❌ Request timed out for {url}")
+except Exception as e:
+    print(f"❌ Error: {e}")
+
+print("\n✅ Header grab complete.\n")
+```
+
+# Entry point
+
+if **name** == “**main**”:
+if len(sys.argv) != 2:
+print(“Usage: python header_grabber.py <url>”)
+print(“Example: python header_grabber.py https://google.com”)
+sys.exit(1)
+
+```
+url = sys.argv[1]
+
+# Make sure URL has a scheme
+if not url.startswith("http"):
+    url = "https://" + url
+
+grab_headers(url)
+```
