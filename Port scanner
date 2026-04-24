@@ -1,0 +1,91 @@
+import socket
+import sys
+from datetime import datetime
+
+# ———————————————–
+
+# port_scanner.py — by codex-regex
+
+# What it does: Scans a target for open TCP ports
+
+# Usage: python port_scanner.py example.com
+
+# ———————————————–
+
+# Common ports to scan and what they’re usually used for
+
+COMMON_PORTS = {
+21:  “FTP”,
+22:  “SSH”,
+23:  “Telnet”,
+25:  “SMTP”,
+53:  “DNS”,
+80:  “HTTP”,
+110: “POP3”,
+143: “IMAP”,
+443: “HTTPS”,
+445: “SMB”,
+3306:“MySQL”,
+3389:“RDP”,
+8080:“HTTP-Alt”,
+8443:“HTTPS-Alt”,
+}
+
+def scan_ports(target):
+“””
+Scans common TCP ports on the target host.
+A port is ‘open’ if the target accepts our connection.
+Think of ports like doors — we’re just checking which ones are unlocked.
+“””
+print(f”\n🔍 Starting port scan on: {target}”)
+print(f”⏱  Time started: {datetime.now().strftime(’%Y-%m-%d %H:%M:%S’)}”)
+print(”-” * 40)
+
+```
+try:
+    # Resolve hostname to IP address
+    ip = socket.gethostbyname(target)
+    print(f"📍 Resolved to IP: {ip}\n")
+except socket.gaierror:
+    print(f"❌ Could not resolve hostname: {target}")
+    sys.exit(1)
+
+open_ports = []
+
+for port, service in COMMON_PORTS.items():
+    try:
+        # Create a socket and try to connect
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)  # Wait max 1 second per port
+        result = sock.connect_ex((ip, port))
+
+        if result == 0:
+            print(f"  ✅ Port {port:<6} OPEN   — {service}")
+            open_ports.append(port)
+        else:
+            print(f"  ❌ Port {port:<6} closed — {service}")
+
+        sock.close()
+
+    except Exception as e:
+        print(f"  ⚠️  Port {port} error: {e}")
+
+print("-" * 40)
+print(f"\n📊 Scan complete. {len(open_ports)} open port(s) found.")
+if open_ports:
+    print(f"   Open ports: {open_ports}\n")
+```
+
+# Entry point
+
+if **name** == “**main**”:
+if len(sys.argv) != 2:
+print(“Usage: python port_scanner.py <target>”)
+print(“Example: python port_scanner.py google.com”)
+print(”\n⚠️  Only scan systems you own or have permission to test!”)
+sys.exit(1)
+
+```
+target = sys.argv[1]
+scan_ports(target)
+```
