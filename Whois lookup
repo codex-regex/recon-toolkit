@@ -1,0 +1,54 @@
+import whois
+import sys
+
+# ———————————————–
+
+# whois_lookup.py — by codex-regex
+
+# What it does: Looks up registration info for a domain
+
+# Usage: python whois_lookup.py example.com
+
+# ———————————————–
+
+def whois_lookup(domain):
+“””
+Performs a WHOIS lookup on the given domain.
+WHOIS tells us: who registered it, when, and when it expires.
+This is passive recon — we’re just asking public records.
+“””
+print(f”\n🔍 Running WHOIS lookup on: {domain}\n”)
+print(”-” * 40)
+
+```
+try:
+    result = whois.whois(domain)
+
+    print(f"Domain Name    : {result.domain_name}")
+    print(f"Registrar      : {result.registrar}")
+    print(f"Creation Date  : {result.creation_date}")
+    print(f"Expiry Date    : {result.expiration_date}")
+    print(f"Name Servers   : {result.name_servers}")
+    print(f"Status         : {result.status}")
+    print(f"Emails         : {result.emails}")
+
+except Exception as e:
+    print(f"❌ Error: Could not retrieve WHOIS data for {domain}")
+    print(f"   Reason: {e}")
+
+print("-" * 40)
+print("✅ WHOIS lookup complete.\n")
+```
+
+# Entry point — runs when you call the script directly
+
+if **name** == “**main**”:
+if len(sys.argv) != 2:
+print(“Usage: python whois_lookup.py <domain>”)
+print(“Example: python whois_lookup.py google.com”)
+sys.exit(1)
+
+```
+domain = sys.argv[1]
+whois_lookup(domain)
+```
